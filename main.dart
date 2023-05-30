@@ -30,37 +30,54 @@ void main() {
   print('------------\nStarting\n------------');
 
   final subject = Subject(id: 1, name: 'Maths');
-  final topic =
-      Topic(id: 1, name: 'Algebra', subject: subject, understandingLevel: 2);
-  final topic2 =
-      Topic(id: 2, name: 'Geometry', subject: subject, understandingLevel: 5);
+
+  // final topic11 = Topic(
+  //   id: 11,
+  //   name: 'Topic11',
+  //   subject: subject,
+  //   understandingLevel: 5,
+  // );
+  // final topic12 = Topic(
+  //   id: 12,
+  //   name: 'Topic12',
+  //   subject: subject,
+  //   understandingLevel: 4,
+  // );
+  // final topic13 = Topic(
+  //   id: 13,
+  //   name: 'Topic13',
+  //   subject: subject,
+  //   understandingLevel: 2,
+  // );
+
+  final topic = Topic(
+    id: 1,
+    name: 'Topic1',
+    subject: subject,
+    understandingLevel: 2,
+    // dependeeTopic: topic11,
+  );
+  final topic2 = Topic(
+    id: 2,
+    name: 'Topic2',
+    subject: subject,
+    understandingLevel: 5,
+    // dependeeTopic: topic12,
+  );
   final topic3 = Topic(
-      id: 3, name: 'Trigonometry', subject: subject, understandingLevel: 7);
-  final topic11 =
-      Topic(id: 11, name: 'A', subject: subject, understandingLevel: 5);
-  // final topic12 =
-  //     Topic(id: 12, name: 'B', subject: subject, understandingLevel: 2);
-  // final topic13 =
-  //     Topic(id: 13, name: 'B', subject: subject, understandingLevel: 4);
+    id: 3,
+    name: 'Topic3',
+    subject: subject,
+    understandingLevel: 7,
+    // dependeeTopic: topic13,
+  );
 
-  // List<Topic> topics = [topic3, topic2, topic, topic11, topic12, topic13];
-  List<Topic> topics = [topic3, topic2, topic, topic11];
-
-  //PRINT ALL TOPICS
-  // print('------------\nList of Topics\n------------');
-  // topics.forEach((topic) {
-  //   print('Topic: ${topic.name}: ${topic.understandingLevel}}');
-  // });
+  List<Topic> topics = [topic3, topic2, topic]; //, topic11, topic12, topic13];
 
   RecommenderAlgorithm recommenderAlgorithm =
       RecommenderAlgorithm(topics: topics);
 
   recommenderAlgorithm.getRecommendedTopics(false);
-
-  // print('------------\nRecommended Topics\n------------');
-  // recommendedTopics.forEach((topic) {
-  //   print('Topic: ${topic.name}: ${topic.understandingLevel}');
-  // });
 }
 
 class RecommenderAlgorithm {
@@ -69,9 +86,6 @@ class RecommenderAlgorithm {
   RecommenderAlgorithm({required this.topics});
 
   void getRecommendedTopics(bool stopStudying) {
-    // mergeSort(topics, 0, topics.length - 1);
-    //PRINTING ALL RECOMMENDED TOPICS
-
     List<Topic> recommendedTopics = topics;
 
     bubbleSort(recommendedTopics);
@@ -92,17 +106,6 @@ class RecommenderAlgorithm {
     getRecommendedTopics(false);
   }
 
-  void customCompare(recommendedTopics, Topic a, Topic b) {
-    if (b.understandingLevel > a.understandingLevel) {
-      Topic temp = b;
-      b = a;
-      a = temp;
-    } else if (b.understandingLevel == a.understandingLevel) {
-      recommendedTopics.remove(a);
-      recommendedTopics.add(a);
-    }
-  }
-
   void bubbleSort(List<Topic> recommendedTopics) {
     int n = recommendedTopics.length;
     bool swapped;
@@ -111,8 +114,9 @@ class RecommenderAlgorithm {
       swapped = false;
 
       for (int j = 0; j < n - i - 1; j++) {
-        int comparison =
-            compare(recommendedTopics[j], recommendedTopics[j + 1]);
+        int comparison = recommendedTopics[j]
+            .understandingLevel
+            .compareTo(recommendedTopics[j + 1].understandingLevel);
         if (comparison > 0) {
           Topic temp = recommendedTopics[j];
           recommendedTopics[j] = recommendedTopics[j + 1];
@@ -131,18 +135,6 @@ class RecommenderAlgorithm {
     if (recommendedTopics.isNotEmpty &&
         recommendedTopics[0].understandingLevel == 7) {
       recommendedTopics.add(recommendedTopics.removeAt(0));
-    }
-  }
-
-  int compare(Topic a, Topic b) {
-    if (a.understandingLevel == b.understandingLevel) {
-      return 0;
-    } else if (a.understandingLevel == 7) {
-      return 1; // Return 1 to push the first topic to the end of the list.
-    } else if (b.understandingLevel == 7) {
-      return -1;
-    } else {
-      return a.understandingLevel.compareTo(b.understandingLevel);
     }
   }
 
