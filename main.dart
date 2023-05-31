@@ -33,13 +33,6 @@ void main() {
 
   final topic0 = Topic(id: 0, name: "Topic0", subject: subject);
 
-  final topic11 = Topic(
-    id: 11,
-    name: 'Topic11',
-    subject: subject,
-    understandingLevel: 5,
-    dependeeTopic: topic0,
-  );
   final topic12 = Topic(
     id: 12,
     name: 'Topic12',
@@ -47,21 +40,29 @@ void main() {
     understandingLevel: 4,
     dependeeTopic: topic0,
   );
+
+  final topic11 = Topic(
+    id: 11,
+    name: 'Topic11',
+    subject: subject,
+    understandingLevel: 5,
+    dependeeTopic: topic12,
+  );
   final topic13 = Topic(
     id: 13,
     name: 'Topic13',
     subject: subject,
     understandingLevel: 2,
     dependeeTopic:
-        topic0, //THOSE WHO DONT HAVE DEPENDEE TOPIC ARE ASSIGNED TOPIC 0 BY DEFAULT
+        topic12, //THOSE WHO DONT HAVE DEPENDEE TOPIC ARE ASSIGNED TOPIC 0 BY DEFAULT
   );
 
   final topic = Topic(
     id: 1,
     name: 'Topic1',
     subject: subject,
-    understandingLevel: 2,
-    dependeeTopic: topic11,
+    understandingLevel: 4,
+    dependeeTopic: topic12,
   );
   final topic2 = Topic(
     id: 2,
@@ -75,7 +76,7 @@ void main() {
     name: 'Topic3',
     subject: subject,
     understandingLevel: 7,
-    dependeeTopic: topic13,
+    dependeeTopic: topic12,
   );
 
   final topic21 = Topic(
@@ -83,7 +84,7 @@ void main() {
     name: 'Topic21',
     subject: subject,
     understandingLevel: 3,
-    dependeeTopic: topic0,
+    dependeeTopic: topic12,
   );
 
   final topic20 = Topic(
@@ -91,7 +92,7 @@ void main() {
     name: 'Topic20',
     subject: subject,
     understandingLevel: 6,
-    dependeeTopic: topic21,
+    dependeeTopic: topic12,
   );
 
   List<Topic> topics = [
@@ -145,6 +146,7 @@ class RecommenderAlgorithm {
 
     //SORTIN
     bubbleSortLevel2(all_topics);
+    bubbleSortLevel1(all_topics);
 
     //SORTED
     for (List<dynamic> rows in all_topics) {
@@ -206,6 +208,47 @@ class RecommenderAlgorithm {
     int sumOfRowFirst = rowFirst[rowFirst.length - 1];
     int sumOfRowSecond = rowSecond[rowSecond.length - 1];
     int comparison = sumOfRowFirst.compareTo(sumOfRowSecond);
+    return comparison;
+  }
+
+  void bubbleSortLevel1(List<List<dynamic>> all_topics) {
+    int n = all_topics.length;
+    int count = 1;
+
+    // for (int k = 0; k < 4; k++) {
+    while (true) {
+      print(count++);
+      bool somethingChanged = false;
+      for (int row = 0; row < n - 1; row++) {
+        int noOfTopics = all_topics[row].length;
+        if (all_topics[row][noOfTopics - 1] ==
+            all_topics[row + 1][noOfTopics - 1]) {
+          int comparison = compareLevel1(
+            all_topics[row],
+            all_topics[row + 1],
+          );
+          if (comparison > 0) {
+            List<dynamic> temp = all_topics[row];
+            all_topics[row] = all_topics[row + 1];
+            all_topics[row + 1] = temp;
+            somethingChanged = true;
+          }
+        }
+      }
+      if (somethingChanged == false) {
+        break;
+      }
+    }
+  }
+
+  int compareLevel1(List<dynamic> rowFirst, List<dynamic> rowSecond) {
+    //[-2] is sum of second last element which is Topic
+    int understandingOfFirstLevel1TopicOfRowFirst =
+        rowFirst[rowFirst.length - 2].understandingLevel;
+    int understandingOfFirstLevel1TopicOfRowSecond =
+        rowSecond[rowSecond.length - 2].understandingLevel;
+    int comparison = understandingOfFirstLevel1TopicOfRowFirst
+        .compareTo(understandingOfFirstLevel1TopicOfRowSecond);
     return comparison;
   }
   // void bubbleSort(List<Topic> recommendedTopics) {
