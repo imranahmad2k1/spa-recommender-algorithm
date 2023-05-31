@@ -145,8 +145,10 @@ class RecommenderAlgorithm {
     }
 
     //SORTIN
-    bubbleSortLevel2(all_topics);
-    bubbleSortLevel1(all_topics);
+    List<Topic> recommendations = bubbleSortLevel2(all_topics);
+    for (Topic t in recommendations) {
+      print('${t.name}');
+    }
 
     //SORTED
     for (List<dynamic> rows in all_topics) {
@@ -177,7 +179,7 @@ class RecommenderAlgorithm {
     //   getRecommendedTopics(false);
   }
 
-  void bubbleSortLevel2(List<List<dynamic>> all_topics) {
+  List<Topic> bubbleSortLevel2(List<List<dynamic>> all_topics) {
     int n = all_topics.length;
     bool swapped;
 
@@ -202,6 +204,7 @@ class RecommenderAlgorithm {
         break;
       }
     }
+    return bubbleSortLevel1(all_topics);
   }
 
   int compareLevel2(List<dynamic> rowFirst, List<dynamic> rowSecond) {
@@ -211,13 +214,12 @@ class RecommenderAlgorithm {
     return comparison;
   }
 
-  void bubbleSortLevel1(List<List<dynamic>> all_topics) {
+  List<Topic> bubbleSortLevel1(List<List<dynamic>> all_topics) {
     int n = all_topics.length;
-    int count = 1;
+    // int count = 1;
 
-    // for (int k = 0; k < 4; k++) {
     while (true) {
-      print(count++);
+      // print(count++);
       bool somethingChanged = false;
       for (int row = 0; row < n - 1; row++) {
         int noOfTopics = all_topics[row].length;
@@ -239,6 +241,15 @@ class RecommenderAlgorithm {
         break;
       }
     }
+
+    List<Topic> recommendedTopics = [];
+    for (List<dynamic> row in all_topics) {
+      int n = row.length;
+      for (int i = n - 2; i > -1; i--) {
+        recommendedTopics.add(row[i]);
+      }
+    }
+    return recommendedTopics;
   }
 
   int compareLevel1(List<dynamic> rowFirst, List<dynamic> rowSecond) {
@@ -283,8 +294,8 @@ class RecommenderAlgorithm {
   //   }
   // }
 
-  // void updateUnderstandingLevel(
-  //     {required Topic topic, required int newUnderstandingLevel}) {
-  //   topic.understandingLevel = newUnderstandingLevel;
-  // }
+  void updateUnderstandingLevel(
+      {required Topic topic, required int newUnderstandingLevel}) {
+    topic.understandingLevel = newUnderstandingLevel;
+  }
 }
